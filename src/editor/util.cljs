@@ -41,7 +41,22 @@
                         (func)                        
                         (.close window true))))
 
-; Map related
+; Collection related
+
+; Source borrowed from Clojure: http://clojuredocs.org/clojure_core/clojure.core/nthrest
+(defn nthrest
+  "Returns the nth rest of coll, coll when n is 0."
+  {:added "1.3"
+   :static true}
+  [coll n]
+    (loop [n n xs coll]
+      (if (and (pos? n) (seq xs))
+        (recur (dec n) (rest xs))
+        xs)))
+
+; borrowed from: http://stackoverflow.com/a/8642069/170217
+(defn indices [pred coll]
+   (keep-indexed #(when (pred %2) %1) coll))
 
 (defn find-map [m k v]
   "Finds a map within a vector of maps based on a key and value"

@@ -9,12 +9,12 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 26 April 2014
+; 27 April 2014
 ;
 
 (ns editor.core
 	(:use [editor.util :only [log find-map find-map-without read-file-sync write-file-sync nw-refresh show-nw-dev-tools fs window nw-gui
-                            watch-window-close-event create-option fill-select-with-options bind-element-event]])
+                            watch-window-close-event create-option fill-select-with-options bind-element-event indices nthrest]])
 	(:require [jayq.core :as jq]
 			  [editor.ace :as frehley]))
 
@@ -67,6 +67,7 @@
 		(set! js/document.title (str editor-name " - [" title "] (" (.getLength (.getSession editor)) ")"))))
 	
 (defn switch-buffer [buffer]
+	;(log (str "switching-buffer: " buffer))
 	(reset! current-buffer buffer)
 	;(log (str "session: " (:session buffer) " for: " (:file-name @current-buffer)))
 	(.setSession editor (:session buffer))
@@ -93,7 +94,7 @@
 										:session (js/ace.EditSession. "" "text")}))
 			(swap! new-buffer conj {:undo-manager (js/ace.UndoManager.)})
 			;(log (str @new-buffer))
-			(log (str "file name: " (:file-name @new-buffer)))
+			;(log (str "file name: " (:file-name @new-buffer)))
 			(swap! editor-state conj @new-buffer)			
 			(fill-buffer-list-with-names)
 			(frehley/set-highlighting (:session @new-buffer) ".txt" #(jq/val $language-mode-switcher %))
@@ -167,11 +168,7 @@
 	(if (not (empty? (:file-path @current-buffer)))
 		(save)
 		(.trigger $file-save-as-dialog "click")))
-
-;
-; TODO: Need to update the buffer with the new name
-;
-		
+	
 (defn file-save-as-dialog-change-event [result]
   (let [files (array-seq (.-files result))
         file (first files)]
@@ -183,15 +180,14 @@
 	(switch-buffer @current-buffer)))
 
 (defn cycle-buffer []
-	(let [es-length (alength (to-array @editor-state))
-		  old-current-buffer @current-buffer]
-		(when (> es-length 1)
-			(reset! editor-state (find-map-without @editor-state :file-name (:file-name old-current-buffer)))
-			(log (str "es first: " (first @editor-state)))
-			(switch-buffer (last @editor-state))
-			(swap! editor-state conj old-current-buffer)
-			(log (str "es after: " @editor-state)))))
-
+	(when (> (alength (to-array @editor-state)) 1)
+		(let [curr-index (first (indices #(= @current-buffer %) @editor-state))
+			  first-part (take curr-index @editor-state)
+			  last-part (nthrest @editor-state curr-index)
+			  new-buffer-order (flatten (merge first-part last-part))]
+			  (reset! editor-state new-buffer-order)
+			  (switch-buffer (second @editor-state)))))
+			  
 (defn close-buffer []
   (when-not (empty? @editor-state)
     (when (js/confirm "Are you sure you want to close this buffer?")
