@@ -1,0 +1,11 @@
+{
+  "name": "(Ace) Frehley",
+  "main": "index.html",
+  "keywords": [ "editor", "node-webkit" ],
+  "window": {
+	"icon": "aurora.png",
+    "toolbar": false,
+    "width": 1024,
+    "height": 768
+  }
+}
