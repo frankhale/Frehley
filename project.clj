@@ -1,4 +1,4 @@
-(defproject editor "0.2.5-SNAPSHOT"
+(defproject frehley "0.2.6-SNAPSHOT"
   :description "A rudimentary editor that uses the Ace editor control"
   :url "http://github.com/frankhale/editor"
   :license {:name "Eclipse Public License"
