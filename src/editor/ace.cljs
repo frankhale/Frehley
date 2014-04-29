@@ -3,7 +3,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 2 February 2014
+; 28 April 2014
 
 (ns editor.ace
   (:use [editor.util :only [log]]))
@@ -14,13 +14,13 @@
                  "18px"
                  "20px"
                  "22px"])
-
+ 
 (defn set-editor-highlighting-mode
   ([session mode]
-	(log (str "setting language mode to: " mode " for session:" session))
+	;(log (str "setting language mode to: " mode " for session:" session))
 	(set-editor-highlighting-mode session mode nil))
   ([session mode func]
-   (log (str "setting language mode to: " mode " for session:" session))
+   ;(log (str "setting language mode to: " mode " for session:" session))
    (if mode     
 	 (.setMode session (str "ace/mode/" mode))
      (.setMode session))
@@ -84,8 +84,15 @@
     (.setDisplayIndentGuides editor true)
     (.setDisplayIndentGuides editor false)))
 
-(defn set-line-endings-mode [session mode]
-  (.setNewLineMode session mode))
+(defn show-gutter [editor result]
+	;(log (str "show-gutter: " result))
+	(if result
+		(.setShowGutter (.-renderer editor) true)
+		(.setShowGutter (.-renderer editor) false)))
+	
+(defn set-line-endings-mode [editor mode]
+  ;(log (str "setting line endings to: " mode))
+  (.setNewLineMode (.getSession editor) mode))
 
 (defn get-resource-list [fs resource-path prefix]
   (let [files (array-seq (.readdirSync fs resource-path))

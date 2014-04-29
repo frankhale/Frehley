@@ -6,7 +6,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 18 March 2014
+; 27 April 2014
 ;
 
 (ns editor.util

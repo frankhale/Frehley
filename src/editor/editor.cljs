@@ -9,7 +9,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 27 April 2014
+; 28 April 2014
 ;
 
 (ns editor.core
@@ -28,6 +28,7 @@
 (def $buffer-switcher (jq/$ :#bufferSwitcher))
 (def $show-invisible-chars (jq/$ :#showInvisibleChars))
 (def $show-indent-guides (jq/$ :#showIndentGuides))
+(def $show-gutter (jq/$ :#showGutter))
 (def $line-endings-switcher (jq/$ :#lineEndingsSwitcher))
 (def $language-mode-switcher (jq/$ :#languageModeSwitcher))
 
@@ -64,7 +65,7 @@
 	([]
 		(set-editor-title (:file-name @current-buffer)))		
 	([title]		
-		(set! js/document.title (str editor-name " - [" title "] (" (.getLength (.getSession editor)) ")"))))
+		(set! js/document.title (str editor-name " - [" title "] (Line: " (.getLength (.getSession editor)) ")"))))
 	
 (defn switch-buffer [buffer]
 	;(log (str "switching-buffer: " buffer))
@@ -122,6 +123,7 @@
 				 :font-size (jq/val $font-size-switcher)
 				 :show-invisible-chars (jq/prop $show-invisible-chars "checked")
 				 :show-indent-guides (jq/prop $show-indent-guides "checked")
+				 :show-gutter (jq/prop $show-gutter "checked")
 				 :line-endings-mode (jq/val $line-endings-switcher)}
 		  json (.stringify js/JSON (clj->js config-file))]
 		(.mkdirsSync fs-extra (.dirname path config-file-path))
@@ -138,7 +140,10 @@
 		  (frehley/show-invisible-chars editor (:show-invisible-chars config))
 		  (jq/prop $show-indent-guides {:checked (:show-indent-guides config)})
 		  (frehley/show-indent-guides editor (:show-indent-guides config))
-		  (jq/val $line-endings-switcher (:line-endings-mode config)))
+		  (jq/prop $show-gutter {:checked (:show-gutter config)})
+		  (frehley/show-gutter editor (:show-gutter config))
+		  (jq/val $line-endings-switcher (:line-endings-mode config))
+		  (frehley/set-line-endings-mode editor (:line-endings-mode config)))		  
 		(do
 		  (frehley/set-editor-theme editor (jq/val $theme-switcher))
 		  (frehley/set-editor-font-size editor (jq/val $font-size-switcher))
@@ -174,8 +179,8 @@
         file (first files)]
 	(swap! current-buffer conj {:file-path (.-path file) 
 								:file-name (.-name file)})
-	(log (str "save-as: " @current-buffer))
-	(log (str "save-as: " (:file-path @current-buffer)))
+	;(log (str "save-as: " @current-buffer))
+	;(log (str "save-as: " (:file-path @current-buffer)))
 	(save)
 	(switch-buffer @current-buffer)))
 
@@ -192,7 +197,7 @@
   (when-not (empty? @editor-state)
     (when (js/confirm "Are you sure you want to close this buffer?")
 		(let [new-state (find-map-without @editor-state :file-name (:file-name @current-buffer))]
-			(log (str "new-state: " new-state))
+			;(log (str "new-state: " new-state))
 			(reset! editor-state new-state)
 			(fill-buffer-list-with-names) 
 			(if-not (empty? @editor-state)
@@ -227,7 +232,8 @@
 	(bind-element-event $font-size-switcher :change #(do (frehley/set-editor-font-size editor (.-value %)) (write-config)))
 	(bind-element-event $show-invisible-chars :click #(frehley/show-invisible-chars editor (.-checked %)))
 	(bind-element-event $show-indent-guides :click #(frehley/show-indent-guides editor (.-checked %)))
-	(bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode (.getSession editor) (.-value %))))
+	(bind-element-event $show-gutter :click #(frehley/show-gutter editor (.-checked %)))
+	(bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode editor (.-value %))))
 
 (defn document-ondrop [e]
 	(let [files (array-seq (.-files (.-dataTransfer e)))
@@ -240,6 +246,7 @@
 	(set! (.-ondrop js/window) (fn [e] (jq/prevent e)))
 	(set! (.-ondrop js/document) (fn [e] (document-ondrop e)))
 	(set! (.-onkeydown js/document) (fn [e] (document-onkeydown e)))
+	(frehley/show-gutter editor false)
 	(frehley/set-editor-theme editor "chaos")
 	(frehley/load-and-enable-editor-snippets editor (.-config js/ace))
 	(fill-select-with-options $theme-switcher (frehley/get-resource-list fs ace-resource-path "theme"))
