@@ -9,7 +9,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 28 April 2014
+; 30 April 2014
 ;
 
 (ns editor.core
@@ -29,6 +29,7 @@
 (def $show-invisible-chars (jq/$ :#showInvisibleChars))
 (def $show-indent-guides (jq/$ :#showIndentGuides))
 (def $show-gutter (jq/$ :#showGutter))
+(def $line-wrap (jq/$ :#lineWrap))
 (def $line-endings-switcher (jq/$ :#lineEndingsSwitcher))
 (def $language-mode-switcher (jq/$ :#languageModeSwitcher))
 
@@ -65,7 +66,7 @@
 	([]
 		(set-editor-title (:file-name @current-buffer)))		
 	([title]		
-		(set! js/document.title (str editor-name " - [" title "] (Line: " (.getLength (.getSession editor)) ")"))))
+		(set! js/document.title (str editor-name " - [" title "] (Lines: " (.getLength (.getSession editor)) ")"))))
 	
 (defn switch-buffer [buffer]
 	;(log (str "switching-buffer: " buffer))
@@ -108,13 +109,15 @@
 	"This toggles the editors visibility, the control panel is hidden beneath"
 	(if (= "none" (jq/css $editor :display))
 		(do
-			(jq/css $editor {:display "block"})
-			(jq/css $control-panel {:display "none"})
+			;(jq/css $editor {:display "block"})
+			(jq/fade-in $editor "slow")
+			(jq/css $control-panel {:display "none"})			
 			(.updateFull (.-renderer editor))
 			(set-editor-title))
 		(do
 			(jq/css $editor {:display "none"})
-			(jq/css $control-panel {:display "block"})
+			;(jq/css $control-panel {:display "block"})
+			(jq/fade-in $control-panel "slow")
 			(set-editor-title "Control Panel"))))
 				
 (defn write-config []
@@ -124,6 +127,7 @@
 				 :show-invisible-chars (jq/prop $show-invisible-chars "checked")
 				 :show-indent-guides (jq/prop $show-indent-guides "checked")
 				 :show-gutter (jq/prop $show-gutter "checked")
+				 :line-wrap (jq/prop $line-wrap "checked")
 				 :line-endings-mode (jq/val $line-endings-switcher)}
 		  json (.stringify js/JSON (clj->js config-file))]
 		(.mkdirsSync fs-extra (.dirname path config-file-path))
@@ -143,7 +147,11 @@
 		  (jq/prop $show-gutter {:checked (:show-gutter config)})
 		  (frehley/show-gutter editor (:show-gutter config))
 		  (jq/val $line-endings-switcher (:line-endings-mode config))
-		  (frehley/set-line-endings-mode editor (:line-endings-mode config)))		  
+		  (if (= (:line-wrap config) true)
+			(frehley/set-line-wrap editor 80)
+			(frehley/set-line-wrap editor 0))
+		  (jq/val $line-wrap (:line-wrap config))
+		  (frehley/set-line-endings-mode editor (:line-endings-mode config)))	  
 		(do
 		  (frehley/set-editor-theme editor (jq/val $theme-switcher))
 		  (frehley/set-editor-font-size editor (jq/val $font-size-switcher))
@@ -163,11 +171,11 @@
 	(.trigger $file-open-dialog "click"))
 
 (defn file-open-dialog-change-event [result]
-  (let [files (array-seq (.-files result))]
-	(open files)))
+	(let [files (array-seq (.-files result))]
+		(open files)))
 
 (defn save []
-  (write-file-sync (:file-path @current-buffer) (.getValue editor)))
+	(write-file-sync (:file-path @current-buffer) (.getValue editor)))
 
 (defn save-or-save-as-file []
 	(if (not (empty? (:file-path @current-buffer)))
@@ -175,14 +183,14 @@
 		(.trigger $file-save-as-dialog "click")))
 	
 (defn file-save-as-dialog-change-event [result]
-  (let [files (array-seq (.-files result))
-        file (first files)]
-	(swap! current-buffer conj {:file-path (.-path file) 
-								:file-name (.-name file)})
-	;(log (str "save-as: " @current-buffer))
-	;(log (str "save-as: " (:file-path @current-buffer)))
-	(save)
-	(switch-buffer @current-buffer)))
+	(let [files (array-seq (.-files result))
+		  file (first files)]
+		(swap! current-buffer conj {:file-path (.-path file) 
+									:file-name (.-name file)})
+		;(log (str "save-as: " @current-buffer))
+		;(log (str "save-as: " (:file-path @current-buffer)))
+		(save)
+		(switch-buffer @current-buffer)))
 
 (defn cycle-buffer []
 	(when (> (alength (to-array @editor-state)) 1)
@@ -194,15 +202,15 @@
 			  (switch-buffer (second @editor-state)))))
 			  
 (defn close-buffer []
-  (when-not (empty? @editor-state)
-    (when (js/confirm "Are you sure you want to close this buffer?")
-		(let [new-state (find-map-without @editor-state :file-name (:file-name @current-buffer))]
-			;(log (str "new-state: " new-state))
-			(reset! editor-state new-state)
-			(fill-buffer-list-with-names) 
-			(if-not (empty? @editor-state)
-				(switch-buffer (last @editor-state))
-				(switch-buffer (insert-new-buffer)))))))
+	(when-not (empty? @editor-state)
+		(when (js/confirm "Are you sure you want to close this buffer?")
+			(let [new-state (find-map-without @editor-state :file-name (:file-name @current-buffer))]
+				;(log (str "new-state: " new-state))
+				(reset! editor-state new-state)
+				(fill-buffer-list-with-names) 
+				(if-not (empty? @editor-state)
+					(switch-buffer (last @editor-state))
+					(switch-buffer (insert-new-buffer)))))))
 	
 (defn document-onkeydown [e]
 	"Handles all of the custom key combos for the editor. All combos start with CTRL and then the key."
@@ -233,6 +241,7 @@
 	(bind-element-event $show-invisible-chars :click #(frehley/show-invisible-chars editor (.-checked %)))
 	(bind-element-event $show-indent-guides :click #(frehley/show-indent-guides editor (.-checked %)))
 	(bind-element-event $show-gutter :click #(frehley/show-gutter editor (.-checked %)))
+	(bind-element-event $line-wrap :click #(frehley/set-line-wrap editor (.-checked %)))
 	(bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode editor (.-value %))))
 
 (defn document-ondrop [e]
