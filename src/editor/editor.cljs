@@ -14,7 +14,7 @@
 
 (ns editor.core
 	(:use [editor.util :only [log find-map find-map-without read-file-sync write-file-sync nw-refresh show-nw-dev-tools fs window nw-gui
-                            watch-window-close-event create-option fill-select-with-options bind-element-event indices nthrest]])
+                            watch-window-close-event create-option fill-select-with-options bind-element-event indices nthrest open-about-page]])
 	(:require [jayq.core :as jq]
 			  [editor.ace :as frehley]))
 
@@ -23,6 +23,7 @@
 (def $file-save-as-dialog (jq/$ :#fileSaveAsDialog))
 (def $file-open-dialog (jq/$ :#fileOpenDialog))
 (def $control-panel (jq/$ :#controlPanel))
+(def $about (jq/$ :#about))
 (def $theme-switcher (jq/$ :#themeSwitcher))
 (def $font-size-switcher (jq/$ :#fontSizeSwitcher))
 (def $buffer-switcher (jq/$ :#bufferSwitcher))
@@ -37,6 +38,7 @@
 (def fs-extra (js/require "fs-extra"))
 (def path (js/require "path"))
 (def editor (.edit js/ace "editor"))
+(def markdown (js/require "marked"))
 
 (def config-file-path "resources/config/settings.json")
 (def ace-resource-path "resources/scripts/ace")
@@ -54,6 +56,7 @@
 				:w 119
                 :tab 9
                 :f1 112
+				:f11 122
                 :f12 123})
 
 (defn fill-buffer-list-with-names []
@@ -105,18 +108,28 @@
 (defn insert-new-buffer-and-switch []
 	(switch-buffer (insert-new-buffer)))
 			
+(defn show-about [] 
+	(jq/css $editor {:display "none"})
+	(jq/css $control-panel {:display "none"})
+	(if (= "none" (jq/css $about :display))
+		(do
+			(jq/css $about {:display "none"})
+			(jq/fade-in $about "slow"))			
+		(do
+			(jq/fade-in $editor "slow")
+			(jq/css $about {:display "none"}))))
+			
 (defn show-control-panel []
 	"This toggles the editors visibility, the control panel is hidden beneath"
+	(jq/css $about {:display "none"})
 	(if (= "none" (jq/css $editor :display))
 		(do
-			;(jq/css $editor {:display "block"})
+			(jq/css $control-panel {:display "none"})
 			(jq/fade-in $editor "slow")
-			(jq/css $control-panel {:display "none"})			
 			(.updateFull (.-renderer editor))
 			(set-editor-title))
 		(do
 			(jq/css $editor {:display "none"})
-			;(jq/css $control-panel {:display "block"})
 			(jq/fade-in $control-panel "slow")
 			(set-editor-title "Control Panel"))))
 				
@@ -223,7 +236,8 @@
 		(key-bind-with-ctrl :m close-buffer)
 		(key-bind-with-ctrl :tab cycle-buffer)
 		(key-bind-with-ctrl :w write-config)
-		(key-bind :f1 show-control-panel)		
+		(key-bind :f1 show-control-panel)
+		(key-bind :f11 show-about)
 		(key-bind :f12 show-nw-dev-tools)	
 		e))	
 			
@@ -255,6 +269,7 @@
 	(set! (.-ondrop js/window) (fn [e] (jq/prevent e)))
 	(set! (.-ondrop js/document) (fn [e] (document-ondrop e)))
 	(set! (.-onkeydown js/document) (fn [e] (document-onkeydown e)))
+	(jq/html $about (markdown (open-about-page)))	
 	(frehley/show-gutter editor false)
 	(frehley/set-editor-theme editor "chaos")
 	(frehley/load-and-enable-editor-snippets editor (.-config js/ace))

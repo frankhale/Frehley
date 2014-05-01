@@ -1,11 +1,18 @@
 {
-  "name": "(Ace) Frehley",
+  "name": "Frehley",
   "main": "index.html",
-  "keywords": [ "editor", "node-webkit" ],
+  "keywords": [
+    "editor",
+    "node-webkit"
+  ],
   "window": {
-	"icon": "aurora.png",
+    "icon": "aurora.png",
     "toolbar": false,
     "width": 1024,
     "height": 768
+  },
+  "dependencies": {
+    "fs-extra": "^0.8.1",
+    "marked": "^0.3.2"
   }
 }

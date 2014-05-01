@@ -16,6 +16,9 @@
 
 (def fs (js/require "fs"))
 
+(defn open-about-page []
+	(str (.readFileSync fs "About.md")))
+
 (defn read-file-sync [file]
   (.readFileSync fs (.-path file)))
 
