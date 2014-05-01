@@ -13,10 +13,9 @@
 ;
 
 (ns editor.core
-	(:use [editor.util :only [log find-map find-map-without read-file-sync write-file-sync nw-refresh show-nw-dev-tools fs window nw-gui
-                            watch-window-close-event create-option fill-select-with-options bind-element-event indices nthrest open-about-page]])
 	(:require [jayq.core :as jq]
-			  [editor.ace :as frehley]))
+			  [editor.ace :as frehley]
+			  [editor.util :as util]))
 
 ; DOM Selectors
 (def $editor (jq/$ :#editor))
@@ -63,13 +62,15 @@
 	(let [names (map #(:file-name %) @editor-state)]
 		;(log (str names))
 		(jq/html $buffer-switcher "")
-		(fill-select-with-options $buffer-switcher names)))
+		(util/fill-select-with-options $buffer-switcher names)))
 
 (defn set-editor-title 
 	([]
 		(set-editor-title (:file-name @current-buffer)))		
-	([title]		
-		(set! js/document.title (str editor-name " - [" title "] (Lines: " (.getLength (.getSession editor)) ")"))))
+	([title]
+		(if (or (= title "Control Panel") (= title "About"))
+			(set! js/document.title (str editor-name " - [" title "]"))
+			(set! js/document.title (str editor-name " - [" title "] (Lines: " (.getLength (.getSession editor)) ")")))))
 	
 (defn switch-buffer [buffer]
 	;(log (str "switching-buffer: " buffer))
@@ -90,7 +91,7 @@
 	([file]
 		(let [new-buffer (atom {})]
 			(if-not (nil? file)
-				(let [text (str (read-file-sync file))]
+				(let [text (str (util/read-file-sync file))]
 					(swap! new-buffer conj {:file-name (.-name file)
 											:file-path (.-path file)
 											:text text
@@ -108,16 +109,18 @@
 (defn insert-new-buffer-and-switch []
 	(switch-buffer (insert-new-buffer)))
 			
-(defn show-about [] 
+(defn show-about []
 	(jq/css $editor {:display "none"})
 	(jq/css $control-panel {:display "none"})
 	(if (= "none" (jq/css $about :display))
 		(do
+			(set-editor-title "About")
 			(jq/css $about {:display "none"})
 			(jq/fade-in $about "slow"))			
 		(do
 			(jq/fade-in $editor "slow")
-			(jq/css $about {:display "none"}))))
+			(jq/css $about {:display "none"})
+			(set-editor-title))))
 			
 (defn show-control-panel []
 	"This toggles the editors visibility, the control panel is hidden beneath"
@@ -144,7 +147,7 @@
 				 :line-endings-mode (jq/val $line-endings-switcher)}
 		  json (.stringify js/JSON (clj->js config-file))]
 		(.mkdirsSync fs-extra (.dirname path config-file-path))
-		(write-file-sync config-file-path json)))
+		(util/write-file-sync config-file-path json)))
 	
 (defn set-editor-props-from-config [config]
 	(if config
@@ -172,9 +175,9 @@
 	
 (defn read-config [func]
 	"Reads the editor configuration file from resources/config/settings.json"
-	(let [exists (.existsSync fs config-file-path)]
+	(let [exists (.existsSync util/fs config-file-path)]
 		(if exists
-			(.readFile fs config-file-path (fn [error data] (if-not error (func data))))
+			(.readFile util/fs config-file-path (fn [error data] (if-not error (func data))))
 			(func nil))))
 
 (defn open [files]
@@ -188,7 +191,7 @@
 		(open files)))
 
 (defn save []
-	(write-file-sync (:file-path @current-buffer) (.getValue editor)))
+	(util/write-file-sync (:file-path @current-buffer) (.getValue editor)))
 
 (defn save-or-save-as-file []
 	(if (not (empty? (:file-path @current-buffer)))
@@ -207,9 +210,9 @@
 
 (defn cycle-buffer []
 	(when (> (alength (to-array @editor-state)) 1)
-		(let [curr-index (first (indices #(= @current-buffer %) @editor-state))
+		(let [curr-index (first (util/indices #(= @current-buffer %) @editor-state))
 			  first-part (take curr-index @editor-state)
-			  last-part (nthrest @editor-state curr-index)
+			  last-part (util/nthrest @editor-state curr-index)
 			  new-buffer-order (flatten (merge first-part last-part))]
 			  (reset! editor-state new-buffer-order)
 			  (switch-buffer (second @editor-state)))))
@@ -217,7 +220,7 @@
 (defn close-buffer []
 	(when-not (empty? @editor-state)
 		(when (js/confirm "Are you sure you want to close this buffer?")
-			(let [new-state (find-map-without @editor-state :file-name (:file-name @current-buffer))]
+			(let [new-state (util/find-map-without @editor-state :file-name (:file-name @current-buffer))]
 				;(log (str "new-state: " new-state))
 				(reset! editor-state new-state)
 				(fill-buffer-list-with-names) 
@@ -229,7 +232,7 @@
 	"Handles all of the custom key combos for the editor. All combos start with CTRL and then the key."
 	(let [key-bind-with-ctrl (fn [k fun] (if (.-ctrlKey e) (and (= (.-keyCode e) (k key-codes))(fun))))
 		key-bind (fn [k fun] (if (= (.-keyCode e) (k key-codes))(fun)))]
-		(key-bind-with-ctrl :b nw-refresh)
+		(key-bind-with-ctrl :b util/nw-refresh)
 		(key-bind-with-ctrl :n insert-new-buffer-and-switch)
 		(key-bind-with-ctrl :o open-file-dialog)
 		(key-bind-with-ctrl :s save-or-save-as-file)
@@ -238,25 +241,25 @@
 		(key-bind-with-ctrl :w write-config)
 		(key-bind :f1 show-control-panel)
 		(key-bind :f11 show-about)
-		(key-bind :f12 show-nw-dev-tools)	
+		(key-bind :f12 util/show-nw-dev-tools)	
 		e))	
 			
 (defn buffer-switcher-change-event [file-name]
-	(let [buffer (first (find-map @editor-state :file-name file-name))]
+	(let [buffer (first (util/find-map @editor-state :file-name file-name))]
 		(switch-buffer buffer)))
 	
 (defn bind-events []
-	(bind-element-event $file-open-dialog :change #(file-open-dialog-change-event %))
-	(bind-element-event $file-save-as-dialog :change #(file-save-as-dialog-change-event %))
-	(bind-element-event $buffer-switcher :change #(buffer-switcher-change-event (.-value %)))
-	(bind-element-event $theme-switcher :change #(do (frehley/set-editor-theme editor (.-value %)) (write-config)))
-	(bind-element-event $language-mode-switcher :change #(do (frehley/set-editor-highlighting-mode (.getSession editor) (.-value %))))
-	(bind-element-event $font-size-switcher :change #(do (frehley/set-editor-font-size editor (.-value %)) (write-config)))
-	(bind-element-event $show-invisible-chars :click #(frehley/show-invisible-chars editor (.-checked %)))
-	(bind-element-event $show-indent-guides :click #(frehley/show-indent-guides editor (.-checked %)))
-	(bind-element-event $show-gutter :click #(frehley/show-gutter editor (.-checked %)))
-	(bind-element-event $line-wrap :click #(frehley/set-line-wrap editor (.-checked %)))
-	(bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode editor (.-value %))))
+	(util/bind-element-event $file-open-dialog :change #(file-open-dialog-change-event %))
+	(util/bind-element-event $file-save-as-dialog :change #(file-save-as-dialog-change-event %))
+	(util/bind-element-event $buffer-switcher :change #(buffer-switcher-change-event (.-value %)))
+	(util/bind-element-event $theme-switcher :change #(do (frehley/set-editor-theme editor (.-value %)) (write-config)))
+	(util/bind-element-event $language-mode-switcher :change #(do (frehley/set-editor-highlighting-mode (.getSession editor) (.-value %))))
+	(util/bind-element-event $font-size-switcher :change #(do (frehley/set-editor-font-size editor (.-value %)) (write-config)))
+	(util/bind-element-event $show-invisible-chars :click #(frehley/show-invisible-chars editor (.-checked %)))
+	(util/bind-element-event $show-indent-guides :click #(frehley/show-indent-guides editor (.-checked %)))
+	(util/bind-element-event $show-gutter :click #(frehley/show-gutter editor (.-checked %)))
+	(util/bind-element-event $line-wrap :click #(frehley/set-line-wrap editor (.-checked %)))
+	(util/bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode editor (.-value %))))
 
 (defn document-ondrop [e]
 	(let [files (array-seq (.-files (.-dataTransfer e)))
@@ -269,14 +272,14 @@
 	(set! (.-ondrop js/window) (fn [e] (jq/prevent e)))
 	(set! (.-ondrop js/document) (fn [e] (document-ondrop e)))
 	(set! (.-onkeydown js/document) (fn [e] (document-onkeydown e)))
-	(jq/html $about (markdown (open-about-page)))	
+	(jq/html $about (markdown (util/open-about-page)))	
 	(frehley/show-gutter editor false)
 	(frehley/set-editor-theme editor "chaos")
 	(frehley/load-and-enable-editor-snippets editor (.-config js/ace))
-	(fill-select-with-options $theme-switcher (frehley/get-resource-list fs ace-resource-path "theme"))
-	(fill-select-with-options $language-mode-switcher (frehley/get-resource-list fs ace-resource-path "mode"))
-	(fill-select-with-options $font-size-switcher frehley/font-sizes)  
-	(watch-window-close-event #(write-config))	
+	(util/fill-select-with-options $theme-switcher (frehley/get-resource-list util/fs ace-resource-path "theme"))
+	(util/fill-select-with-options $language-mode-switcher (frehley/get-resource-list util/fs ace-resource-path "mode"))
+	(util/fill-select-with-options $font-size-switcher frehley/font-sizes)  
+	(util/watch-window-close-event #(write-config))	
 	(read-config #(set-editor-props-from-config (js->clj (.parse js/JSON %) :keywordize-keys true)))
 	(bind-events)
 	(insert-new-buffer-and-switch)

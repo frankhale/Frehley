@@ -7,11 +7,15 @@ a learning aid in order to learn more about Clojurescript and Node-Webkit.
 
 Editor Screenshot:
 
-<img src="http://farm4.staticflickr.com/3729/11123081135_de433bd0b9_o.png" alt="Editor Screenshot" />
+<img src="https://farm8.staticflickr.com/7366/13891522390_cc39f56a6e_b.jpg" alt="Editor Screenshot" />
 
 Control Panel Screenshot:
 
-<img src="http://farm8.staticflickr.com/7423/11123928566_03c6ddb059_b.jpg" alt="Control Panel Screenshot" />
+<img src="https://farm3.staticflickr.com/2926/14078115835_b1f5f23b17_b.jpg" alt="Control Panel Screenshot" />
+
+About Screenshot:
+
+<img src="https://farm8.staticflickr.com/7068/13891494517_4996a176c0_b.jpg" alt="About Screenshot" />
 
 ## Usage
 
@@ -33,6 +37,7 @@ Key short cuts
 - CTRL+B - Reloads the editor in Node-Webkit
 - CTRL+TAB - Cycles through opened files
 - F1  - Opens the control panel (switch editor theme, font size and current buffer)
+- F11 - Shows About information which also contains changelog data
 - F12 - Opens Node-Webkit Dev Tools
 
 You can drag files onto the editor and it will open the files for editing. Use CTRL+TAB to cycle through
