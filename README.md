@@ -1,7 +1,5 @@
 # (Ace) Frehley
 
-##NOTE: This repo is new but this codebase came from the one that I had called 'editor', all sorts of weirdness was happening with that so I deleted it.
-
 This is simple text editor using the Ace editor control in Node-Webkit. This is mainly
 a learning aid in order to learn more about Clojurescript and Node-Webkit.
 
