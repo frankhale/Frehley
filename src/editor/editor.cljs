@@ -9,7 +9,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 30 April 2014
+; 7 May 2014
 ;
 
 (ns editor.core
@@ -181,7 +181,7 @@
 			(func nil))))
 
 (defn open [files]
-	(switch-buffer (first (map #(insert-new-buffer %) files))))
+	(switch-buffer (first (doall (map #(insert-new-buffer %) files)))))
 	
 (defn open-file-dialog []
 	(.trigger $file-open-dialog "click"))
@@ -262,8 +262,7 @@
 	(util/bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode editor (.-value %))))
 
 (defn document-ondrop [e]
-	(let [files (array-seq (.-files (.-dataTransfer e)))
-		  file (first files)]
+	(let [files (array-seq (.-files (.-dataTransfer e)))]
 		(jq/prevent e)
 		(open files)))
 	

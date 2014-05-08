@@ -4,6 +4,10 @@ A simple text editor built using the Ace editor library
 
 ##Changelog
 
+7 May 2014
+
+- Fixed dragging and dropping multiple files on the editor
+
 30 April 2014
 
 - Added about page
