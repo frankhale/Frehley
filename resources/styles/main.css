@@ -24,6 +24,7 @@ body {
 
 .control-panel {
 	display: none;
+	overflow: auto;
 	background-color: #fff;
 	margin: 0;
 	position: absolute;
@@ -50,4 +51,18 @@ body {
 	z-index: 100;
 	padding: 5px;
 	-webkit-border-radius: 10px;
+}
+
+.about {
+	margin: 0;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: none;
+	overflow: auto;
+	background-color: #fff;
+	color: #000;
+	padding: 25px;
 }
