@@ -15,6 +15,12 @@ About Screenshot:
 
 <img src="https://farm8.staticflickr.com/7068/13891494517_4996a176c0_b.jpg" alt="About Screenshot" />
 
+##Screencast about development
+
+"Node-Webkit, Clojurescript and my little editor Frehley"
+
+http://youtu.be/i3DCsL4S8ck
+
 ## Usage
 
 This editor must be ran inside of Node-Webkit
@@ -35,7 +41,8 @@ Key short cuts
 - CTRL+ALT+M - Closes all files being edited
 - CTRL+ALT+B - Reloads the editor in Node-Webkit
 - CTRL+TAB - Cycles through opened files
-- F1  - Opens the control panel (switch editor theme, font size and current buffer, etc...)
+- F1 - Opens the control panel (switch editor theme, font size and current buffer, etc...)
+- F2 - Cycle threw the Ace editor themes 
 - F11 - Shows About information which also contains changelog data
 - F12 - Opens Node-Webkit Dev Tools
 
