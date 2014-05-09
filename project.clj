@@ -1,5 +1,5 @@
-(defproject frehley "0.2.6-SNAPSHOT"
-  :description "A rudimentary editor that uses the Ace editor control"
+(defproject frehley "0.3.0-SNAPSHOT"
+  :description "Frehley is a minimal text editor based on Node-Webkit and the Ace Editor library"
   :url "http://github.com/frankhale/editor"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}

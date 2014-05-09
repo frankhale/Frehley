@@ -69,6 +69,15 @@
   "Finds all maps within a vector of maps that doesn't correspond to a key and value"
   (filter #(if (not= (k %) v) %) m))
 
+(defn starts-with [a b]
+	(first (map = a b)))
+  
+; borrowed from: http://stackoverflow.com/a/3249777/170217
+(defn in? 
+  "true if seq contains elm"
+  [seq elm]  
+  (some #(= elm %) seq))
+  
 ; uses jayq (jQuery helper lib)
 
 (defn create-option [elem val]
