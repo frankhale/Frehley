@@ -6,7 +6,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 27 April 2014
+; 9 May 2014
 ;
 
 (ns editor.util
@@ -71,7 +71,10 @@
 
 (defn starts-with [a b]
 	(first (map = a b)))
-  
+
+(defn without [elem coll]
+	(filter #(if-not (= elem %) %) coll))
+	
 ; borrowed from: http://stackoverflow.com/a/3249777/170217
 (defn in? 
   "true if seq contains elm"

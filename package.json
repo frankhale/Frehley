@@ -1,37 +1,41 @@
 {
-	"name": "Frehley",
-	"main": "index.html",
-	"maintainers":[ 
-		{
-			"name": "Frank Hale",
-			"email": "frankhale@gmail.com",
-			"web": "https://github.com/frankhale"
-		}
-	],
-	"keywords": [
-		"text editor",
-		"node-webkit"
-	],
-	"licenses": [
-		{
-		   "type": "EPLv1",
-		   "url": "http://www.eclipse.org/legal/epl-v10.html"
-		}
-	],
-	"repositories": [
-       {
-            "type": "git", 
-            "url": "https://github.com/frankhale/Frehley.git"            
-       }
-	],
-	"window": {
-		"icon": "aurora.png",
-		"toolbar": false,
-		"width": 1024,
-		"height": 768
-	},
-	"dependencies": {
-		"fs-extra": "^0.8.1",
-		"marked": "^0.3.2"
-	}
+  "name": "Frehley",
+  "main": "app://localhost/index.html",
+  "maintainers": [
+    {
+      "name": "Frank Hale",
+      "email": "frankhale@gmail.com",
+      "web": "https://github.com/frankhale"
+    }
+  ],
+  "keywords": [
+    "text editor",
+    "node-webkit"
+  ],
+  "licenses": [
+    {
+      "type": "EPLv1",
+      "url": "http://www.eclipse.org/legal/epl-v10.html"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/frankhale/Frehley.git"
+    }
+  ],
+  "window": {
+    "icon": "aurora.png",
+    "toolbar": false,
+    "width": 800,
+    "height": 600
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "dependencies": {
+    "fs-extra": "^0.8.1",
+    "marked": "^0.3.2",
+    "nedb": "^0.10.5"
+  }
 }

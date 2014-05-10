@@ -1,10 +1,11 @@
 body {
 	overflow: hidden;
-	background-color: #111;
-	color: #fff;
+	background-color: #fff;
+	color: #000;
 }
 
 #editor {
+	/*display: none;*/
 	margin: 0;
 	position: absolute;
 	top: 0;
@@ -53,7 +54,7 @@ body {
 	-webkit-border-radius: 10px;
 }
 
-.about {
+.about, .help, .start {
 	margin: 0;
 	position: absolute;
 	top: 0;

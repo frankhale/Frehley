@@ -26192,10 +26192,10 @@ editor.util.nthrest = function nthrest(coll, n) {
   var xs = coll;
   while (true) {
     if (n__$1 > 0 && cljs.core.seq.call(null, xs)) {
-      var G__11259 = n__$1 - 1;
-      var G__11260 = cljs.core.rest.call(null, xs);
-      n__$1 = G__11259;
-      xs = G__11260;
+      var G__6788 = n__$1 - 1;
+      var G__6789 = cljs.core.rest.call(null, xs);
+      n__$1 = G__6788;
+      xs = G__6789;
       continue;
     } else {
       return xs;
@@ -26204,27 +26204,27 @@ editor.util.nthrest = function nthrest(coll, n) {
   }
 };
 editor.util.indices = function indices(pred, coll) {
-  return cljs.core.keep_indexed.call(null, function(p1__11262_SHARP_, p2__11261_SHARP_) {
-    if (cljs.core.truth_(pred.call(null, p2__11261_SHARP_))) {
-      return p1__11262_SHARP_;
+  return cljs.core.keep_indexed.call(null, function(p1__6791_SHARP_, p2__6790_SHARP_) {
+    if (cljs.core.truth_(pred.call(null, p2__6790_SHARP_))) {
+      return p1__6791_SHARP_;
     } else {
       return null;
     }
   }, coll);
 };
 editor.util.find_map = function find_map(m, k, v) {
-  return cljs.core.filter.call(null, function(p1__11263_SHARP_) {
-    if (cljs.core._EQ_.call(null, k.call(null, p1__11263_SHARP_), v)) {
-      return p1__11263_SHARP_;
+  return cljs.core.filter.call(null, function(p1__6792_SHARP_) {
+    if (cljs.core._EQ_.call(null, k.call(null, p1__6792_SHARP_), v)) {
+      return p1__6792_SHARP_;
     } else {
       return null;
     }
   }, m);
 };
 editor.util.find_map_without = function find_map_without(m, k, v) {
-  return cljs.core.filter.call(null, function(p1__11264_SHARP_) {
-    if (cljs.core.not_EQ_.call(null, k.call(null, p1__11264_SHARP_), v)) {
-      return p1__11264_SHARP_;
+  return cljs.core.filter.call(null, function(p1__6793_SHARP_) {
+    if (cljs.core.not_EQ_.call(null, k.call(null, p1__6793_SHARP_), v)) {
+      return p1__6793_SHARP_;
     } else {
       return null;
     }
@@ -26233,17 +26233,26 @@ editor.util.find_map_without = function find_map_without(m, k, v) {
 editor.util.starts_with = function starts_with(a, b) {
   return cljs.core.first.call(null, cljs.core.map.call(null, cljs.core._EQ_, a, b));
 };
+editor.util.without = function without(elem, coll) {
+  return cljs.core.filter.call(null, function(p1__6794_SHARP_) {
+    if (!cljs.core._EQ_.call(null, elem, p1__6794_SHARP_)) {
+      return p1__6794_SHARP_;
+    } else {
+      return null;
+    }
+  }, coll);
+};
 editor.util.in_QMARK_ = function in_QMARK_(seq, elm) {
-  return cljs.core.some.call(null, function(p1__11265_SHARP_) {
-    return cljs.core._EQ_.call(null, elm, p1__11265_SHARP_);
+  return cljs.core.some.call(null, function(p1__6795_SHARP_) {
+    return cljs.core._EQ_.call(null, elm, p1__6795_SHARP_);
   }, seq);
 };
 editor.util.create_option = function create_option(elem, val) {
   return jayq.core.append.call(null, elem, [cljs.core.str("\x3coption value\x3d'"), cljs.core.str(val), cljs.core.str("'\x3e"), cljs.core.str(val), cljs.core.str("\x3c/option\x3e")].join(""));
 };
 editor.util.fill_select_with_options = function fill_select_with_options(elem, items) {
-  return cljs.core.doall.call(null, cljs.core.map.call(null, function(p1__11266_SHARP_) {
-    return editor.util.create_option.call(null, elem, p1__11266_SHARP_);
+  return cljs.core.doall.call(null, cljs.core.map.call(null, function(p1__6796_SHARP_) {
+    return editor.util.create_option.call(null, elem, p1__6796_SHARP_);
   }, items));
 };
 editor.util.bind_element_event = function bind_element_event(elem, event, callback) {
@@ -26454,6 +26463,9 @@ editor.core.$line_wrap = jayq.core.$.call(null, new cljs.core.Keyword(null, "#li
 editor.core.$line_endings_switcher = jayq.core.$.call(null, new cljs.core.Keyword(null, "#lineEndingsSwitcher", "#lineEndingsSwitcher", 1755327240));
 editor.core.$language_mode_switcher = jayq.core.$.call(null, new cljs.core.Keyword(null, "#languageModeSwitcher", "#languageModeSwitcher", 1845377329));
 editor.core.$notification = jayq.core.$.call(null, new cljs.core.Keyword(null, "#notification", "#notification", 4224933888));
+editor.core.$help = jayq.core.$.call(null, new cljs.core.Keyword(null, "#help", "#help", 1049426262));
+editor.core.$start = jayq.core.$.call(null, new cljs.core.Keyword(null, "#start", "#start", 2125682065));
+editor.core.pages = new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, [editor.core.$start, editor.core.$editor, editor.core.$control_panel, editor.core.$about, editor.core.$help], null);
 editor.core.fs_extra = require("fs-extra");
 editor.core.path = require("path");
 editor.core.editor = ace.edit("editor");
@@ -26462,17 +26474,18 @@ editor.core.config_file_path = "resources/config/settings.json";
 editor.core.ace_resource_path = "resources/scripts/ace";
 editor.core.new_buffer_name = "New.txt";
 editor.core.editor_name = "Frehley";
+editor.core.welcome_title = [cljs.core.str("Welcome to "), cljs.core.str(editor.core.editor_name)].join("");
 editor.core.warning_close_buffer = "Warning: Are you sure you want to close this buffer?";
 editor.core.warning_close_all_buffers = "Warning: Are you sure you want to close all buffers?";
 editor.core.notification_fade_out_speed = 1250;
 editor.core.ace_themes = editor.ace.get_resource_list.call(null, editor.util.fs, editor.core.ace_resource_path, "theme");
 editor.core.editor_state = cljs.core.atom.call(null, cljs.core.PersistentVector.EMPTY);
 editor.core.current_buffer = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
-editor.core.key_codes = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "tab", "tab", 1014018823), new cljs.core.Keyword(null, "f1", "f1", 1013907453), new cljs.core.Keyword(null, "f2", "f2", 1013907454), new cljs.core.Keyword(null, "b", "b", 1013904340), new cljs.core.Keyword(null, "m", "m", 1013904351), new cljs.core.Keyword(null, "n", "n", 1013904352), new cljs.core.Keyword(null, "o", "o", 1013904353), new cljs.core.Keyword(null, "f11", "f11", 1014003832), new cljs.core.Keyword(null, 
-"f12", "f12", 1014003833), new cljs.core.Keyword(null, "w", "w", 1013904361), new cljs.core.Keyword(null, "s", "s", 1013904357)], [9, 112, 113, 66, 77, 78, 79, 122, 123, 119, 83]);
+editor.core.key_codes = cljs.core.PersistentHashMap.fromArrays([new cljs.core.Keyword(null, "tab", "tab", 1014018823), new cljs.core.Keyword(null, "f1", "f1", 1013907453), new cljs.core.Keyword(null, "f2", "f2", 1013907454), new cljs.core.Keyword(null, "f3", "f3", 1013907455), new cljs.core.Keyword(null, "b", "b", 1013904340), new cljs.core.Keyword(null, "m", "m", 1013904351), new cljs.core.Keyword(null, "n", "n", 1013904352), new cljs.core.Keyword(null, "o", "o", 1013904353), new cljs.core.Keyword(null, 
+"f11", "f11", 1014003832), new cljs.core.Keyword(null, "f12", "f12", 1014003833), new cljs.core.Keyword(null, "f10", "f10", 1014003831), new cljs.core.Keyword(null, "w", "w", 1013904361), new cljs.core.Keyword(null, "s", "s", 1013904357)], [9, 112, 113, 114, 66, 77, 78, 79, 122, 123, 121, 119, 83]);
 editor.core.fill_buffer_list_with_names = function fill_buffer_list_with_names() {
-  var names = cljs.core.map.call(null, function(p1__4984_SHARP_) {
-    return(new cljs.core.Keyword(null, "file-name", "file-name", 3946227630)).cljs$core$IFn$_invoke$arity$1(p1__4984_SHARP_);
+  var names = cljs.core.map.call(null, function(p1__4970_SHARP_) {
+    return(new cljs.core.Keyword(null, "file-name", "file-name", 3946227630)).cljs$core$IFn$_invoke$arity$1(p1__4970_SHARP_);
   }, cljs.core.sort_by.call(null, new cljs.core.Keyword(null, "file-name", "file-name", 3946227630), cljs.core.deref.call(null, editor.core.editor_state)));
   jayq.core.html.call(null, editor.core.$buffer_switcher, "");
   return editor.util.fill_select_with_options.call(null, editor.core.$buffer_switcher, names);
@@ -26483,7 +26496,7 @@ editor.core.set_editor_title = function() {
     return set_editor_title.call(null, (new cljs.core.Keyword(null, "file-name", "file-name", 3946227630)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, editor.core.current_buffer)));
   };
   var set_editor_title__1 = function(title) {
-    if (cljs.core._EQ_.call(null, title, "Control Panel") || cljs.core._EQ_.call(null, title, "About")) {
+    if (cljs.core.not_EQ_.call(null, title, (new cljs.core.Keyword(null, "file-name", "file-name", 3946227630)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, editor.core.current_buffer)))) {
       return document.title = [cljs.core.str(editor.core.editor_name), cljs.core.str(" - ["), cljs.core.str(title), cljs.core.str("]")].join("");
     } else {
       return document.title = [cljs.core.str(editor.core.editor_name), cljs.core.str(" - ["), cljs.core.str(title), cljs.core.str("] (Lines: "), cljs.core.str(editor.core.editor.getSession().getLength()), cljs.core.str(")")].join("");
@@ -26511,8 +26524,8 @@ editor.core.switch_buffer = function switch_buffer(buffer) {
   if (cljs.core.empty_QMARK_.call(null, (new cljs.core.Keyword(null, "file-path", "file-path", 3946287432)).cljs$core$IFn$_invoke$arity$1(buffer))) {
     return null;
   } else {
-    return editor.ace.set_highlighting.call(null, (new cljs.core.Keyword(null, "session", "session", 2998892040)).cljs$core$IFn$_invoke$arity$1(buffer), editor.core.path.extname((new cljs.core.Keyword(null, "file-path", "file-path", 3946287432)).cljs$core$IFn$_invoke$arity$1(buffer)), function(p1__4985_SHARP_) {
-      return jayq.core.val.call(null, editor.core.$language_mode_switcher, p1__4985_SHARP_);
+    return editor.ace.set_highlighting.call(null, (new cljs.core.Keyword(null, "session", "session", 2998892040)).cljs$core$IFn$_invoke$arity$1(buffer), editor.core.path.extname((new cljs.core.Keyword(null, "file-path", "file-path", 3946287432)).cljs$core$IFn$_invoke$arity$1(buffer)), function(p1__4971_SHARP_) {
+      return jayq.core.val.call(null, editor.core.$language_mode_switcher, p1__4971_SHARP_);
     });
   }
 };
@@ -26524,8 +26537,8 @@ editor.core.insert_new_buffer = function() {
   var insert_new_buffer__1 = function(file) {
     var new_buffer = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
     if (!(file == null)) {
-      var text_4987 = [cljs.core.str(editor.util.read_file_sync.call(null, file))].join("");
-      cljs.core.swap_BANG_.call(null, new_buffer, cljs.core.conj, new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, "file-name", "file-name", 3946227630), file.name, new cljs.core.Keyword(null, "file-path", "file-path", 3946287432), file.path, new cljs.core.Keyword(null, "text", "text", 1017460895), text_4987, new cljs.core.Keyword(null, "session", "session", 2998892040), new ace.EditSession(text_4987, "text")], null));
+      var text_4973 = [cljs.core.str(editor.util.read_file_sync.call(null, file))].join("");
+      cljs.core.swap_BANG_.call(null, new_buffer, cljs.core.conj, new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null, "file-name", "file-name", 3946227630), file.name, new cljs.core.Keyword(null, "file-path", "file-path", 3946287432), file.path, new cljs.core.Keyword(null, "text", "text", 1017460895), text_4973, new cljs.core.Keyword(null, "session", "session", 2998892040), new ace.EditSession(text_4973, "text")], null));
     } else {
       cljs.core.swap_BANG_.call(null, new_buffer, cljs.core.conj, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "file-name", "file-name", 3946227630), [cljs.core.str(editor.core.new_buffer_name), cljs.core.str(" "), cljs.core.str(cljs.core.clj__GT_js.call(null, cljs.core.deref.call(null, editor.core.editor_state)).length)].join(""), new cljs.core.Keyword(null, "session", "session", 2998892040), new ace.EditSession("", "text")], null));
     }
@@ -26533,8 +26546,8 @@ editor.core.insert_new_buffer = function() {
     cljs.core.swap_BANG_.call(null, editor.core.editor_state, cljs.core.conj, cljs.core.deref.call(null, new_buffer));
     editor.core.fill_buffer_list_with_names.call(null);
     editor.ace.set_highlighting.call(null, (new cljs.core.Keyword(null, "session", "session", 2998892040)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, new_buffer)), ".txt", function(new_buffer) {
-      return function(p1__4986_SHARP_) {
-        return jayq.core.val.call(null, editor.core.$language_mode_switcher, p1__4986_SHARP_);
+      return function(p1__4972_SHARP_) {
+        return jayq.core.val.call(null, editor.core.$language_mode_switcher, p1__4972_SHARP_);
       };
     }(new_buffer));
     editor.ace.watch_editor_change_event.call(null, (new cljs.core.Keyword(null, "session", "session", 2998892040)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, new_buffer)), function(new_buffer) {
@@ -26565,32 +26578,48 @@ editor.core.insert_new_buffer = function() {
 editor.core.insert_new_buffer_and_switch = function insert_new_buffer_and_switch() {
   return editor.core.switch_buffer.call(null, editor.core.insert_new_buffer.call(null));
 };
-editor.core.toggle_about = function toggle_about() {
-  jayq.core.css.call(null, editor.core.$editor, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-  jayq.core.css.call(null, editor.core.$control_panel, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-  if (cljs.core._EQ_.call(null, "none", jayq.core.css.call(null, editor.core.$about, new cljs.core.Keyword(null, "display", "display", 2685668404)))) {
-    editor.core.set_editor_title.call(null, "About");
-    jayq.core.css.call(null, editor.core.$about, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-    return jayq.core.fade_in.call(null, editor.core.$about, "slow");
-  } else {
-    jayq.core.fade_in.call(null, editor.core.$editor, "slow");
-    jayq.core.css.call(null, editor.core.$about, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-    return editor.core.set_editor_title.call(null);
-  }
+editor.core.rerender_editor = function rerender_editor() {
+  return editor.core.editor.renderer.updateFull();
 };
-editor.core.toggle_control_panel = function toggle_control_panel() {
-  jayq.core.css.call(null, editor.core.$about, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-  if (cljs.core._EQ_.call(null, "none", jayq.core.css.call(null, editor.core.$editor, new cljs.core.Keyword(null, "display", "display", 2685668404)))) {
-    jayq.core.css.call(null, editor.core.$control_panel, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-    jayq.core.fade_in.call(null, editor.core.$editor, "slow");
-    editor.core.editor.renderer.updateFull();
-    return editor.core.set_editor_title.call(null);
-  } else {
-    jayq.core.css.call(null, editor.core.$editor, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "display", "display", 2685668404), "none"], null));
-    jayq.core.fade_in.call(null, editor.core.$control_panel, "slow");
-    return editor.core.set_editor_title.call(null, "Control Panel");
-  }
-};
+editor.core.toggle_page = function() {
+  var toggle_page__delegate = function(elem, p__4975) {
+    var map__4977 = p__4975;
+    var map__4977__$1 = cljs.core.seq_QMARK_.call(null, map__4977) ? cljs.core.apply.call(null, cljs.core.hash_map, map__4977) : map__4977;
+    var func = cljs.core.get.call(null, map__4977__$1, new cljs.core.Keyword(null, "func", "func", 1017058870), null);
+    cljs.core.doall.call(null, cljs.core.map.call(null, function(map__4977, map__4977__$1, func) {
+      return function(p1__4974_SHARP_) {
+        return jayq.core.fade_out.call(null, p1__4974_SHARP_, "fast");
+      };
+    }(map__4977, map__4977__$1, func), editor.core.pages));
+    if (cljs.core.truth_(elem.is(":visible"))) {
+      jayq.core.fade_in.call(null, editor.core.$editor, "fast");
+      editor.core.rerender_editor.call(null);
+      return editor.core.set_editor_title.call(null);
+    } else {
+      jayq.core.fade_in.call(null, elem, "fast");
+      if (cljs.core.truth_(func)) {
+        return func.call(null);
+      } else {
+        return null;
+      }
+    }
+  };
+  var toggle_page = function(elem, var_args) {
+    var p__4975 = null;
+    if (arguments.length > 1) {
+      p__4975 = cljs.core.array_seq(Array.prototype.slice.call(arguments, 1), 0);
+    }
+    return toggle_page__delegate.call(this, elem, p__4975);
+  };
+  toggle_page.cljs$lang$maxFixedArity = 1;
+  toggle_page.cljs$lang$applyTo = function(arglist__4978) {
+    var elem = cljs.core.first(arglist__4978);
+    var p__4975 = cljs.core.rest(arglist__4978);
+    return toggle_page__delegate(elem, p__4975);
+  };
+  toggle_page.cljs$core$IFn$_invoke$arity$variadic = toggle_page__delegate;
+  return toggle_page;
+}();
 editor.core.write_config = function write_config() {
   var config_file = new cljs.core.PersistentArrayMap(null, 7, [new cljs.core.Keyword(null, "theme", "theme", 1124231483), jayq.core.val.call(null, editor.core.$theme_switcher), new cljs.core.Keyword(null, "font-size", "font-size", 3722789425), jayq.core.val.call(null, editor.core.$font_size_switcher), new cljs.core.Keyword(null, "show-invisible-chars", "show-invisible-chars", 4631734879), jayq.core.prop.call(null, editor.core.$show_invisible_chars, "checked"), new cljs.core.Keyword(null, "show-indent-guides", 
   "show-indent-guides", 4511204826), jayq.core.prop.call(null, editor.core.$show_indent_guides, "checked"), new cljs.core.Keyword(null, "show-gutter", "show-gutter", 4080794973), jayq.core.prop.call(null, editor.core.$show_gutter, "checked"), new cljs.core.Keyword(null, "line-wrap", "line-wrap", 3466726901), jayq.core.prop.call(null, editor.core.$line_wrap, "checked"), new cljs.core.Keyword(null, "line-endings-mode", "line-endings-mode", 1629979471), jayq.core.val.call(null, editor.core.$line_endings_switcher)], 
@@ -26642,8 +26671,8 @@ editor.core.read_config = function read_config(func) {
   }
 };
 editor.core.open = function open(files) {
-  return editor.core.switch_buffer.call(null, cljs.core.first.call(null, cljs.core.doall.call(null, cljs.core.map.call(null, function(p1__4988_SHARP_) {
-    return editor.core.insert_new_buffer.call(null, p1__4988_SHARP_);
+  return editor.core.switch_buffer.call(null, cljs.core.first.call(null, cljs.core.doall.call(null, cljs.core.map.call(null, function(p1__4979_SHARP_) {
+    return editor.core.insert_new_buffer.call(null, p1__4979_SHARP_);
   }, files))));
 };
 editor.core.open_file_dialog = function open_file_dialog() {
@@ -26673,8 +26702,8 @@ editor.core.file_save_as_dialog_change_event = function file_save_as_dialog_chan
 };
 editor.core.cycle_buffer = function cycle_buffer() {
   if (cljs.core.to_array.call(null, cljs.core.deref.call(null, editor.core.editor_state)).length > 1) {
-    var curr_index = cljs.core.first.call(null, editor.util.indices.call(null, function(p1__4989_SHARP_) {
-      return cljs.core._EQ_.call(null, cljs.core.deref.call(null, editor.core.current_buffer), p1__4989_SHARP_);
+    var curr_index = cljs.core.first.call(null, editor.util.indices.call(null, function(p1__4980_SHARP_) {
+      return cljs.core._EQ_.call(null, cljs.core.deref.call(null, editor.core.current_buffer), p1__4980_SHARP_);
     }, cljs.core.deref.call(null, editor.core.editor_state)));
     var first_part = cljs.core.take.call(null, curr_index, cljs.core.deref.call(null, editor.core.editor_state));
     var last_part = editor.util.nthrest.call(null, cljs.core.deref.call(null, editor.core.editor_state), curr_index);
@@ -26688,8 +26717,8 @@ editor.core.cycle_editor_themes = function cycle_editor_themes() {
   if (cljs.core.to_array.call(null, editor.core.ace_themes).length > 1) {
     var curr_theme = jayq.core.val.call(null, editor.core.$theme_switcher);
     var curr_index = cljs.core.first.call(null, editor.util.indices.call(null, function(curr_theme) {
-      return function(p1__4990_SHARP_) {
-        return cljs.core._EQ_.call(null, curr_theme, p1__4990_SHARP_);
+      return function(p1__4981_SHARP_) {
+        return cljs.core._EQ_.call(null, curr_theme, p1__4981_SHARP_);
       };
     }(curr_theme), editor.core.ace_themes));
     var first_part = cljs.core.take.call(null, curr_index, editor.core.ace_themes);
@@ -26730,21 +26759,26 @@ editor.core.close_all_buffers = function close_all_buffers() {
   }
 };
 editor.core.editor_state_without_new_empty_files = function editor_state_without_new_empty_files() {
-  var new_state = cljs.core.filter.call(null, function(p1__4991_SHARP_) {
+  var new_state = cljs.core.filter.call(null, function(p1__4982_SHARP_) {
     if (cljs.core.not.call(null, function() {
-      var and__3469__auto__ = editor.util.starts_with.call(null, (new cljs.core.Keyword(null, "file-name", "file-name", 3946227630)).cljs$core$IFn$_invoke$arity$1(p1__4991_SHARP_), editor.core.new_buffer_name);
+      var and__3469__auto__ = editor.util.starts_with.call(null, (new cljs.core.Keyword(null, "file-name", "file-name", 3946227630)).cljs$core$IFn$_invoke$arity$1(p1__4982_SHARP_), editor.core.new_buffer_name);
       if (cljs.core.truth_(and__3469__auto__)) {
-        return cljs.core.empty_QMARK_.call(null, (new cljs.core.Keyword(null, "text", "text", 1017460895)).cljs$core$IFn$_invoke$arity$1(p1__4991_SHARP_));
+        return cljs.core.empty_QMARK_.call(null, (new cljs.core.Keyword(null, "text", "text", 1017460895)).cljs$core$IFn$_invoke$arity$1(p1__4982_SHARP_));
       } else {
         return and__3469__auto__;
       }
     }())) {
-      return p1__4991_SHARP_;
+      return p1__4982_SHARP_;
     } else {
       return null;
     }
   }, cljs.core.deref.call(null, editor.core.editor_state));
   return new_state;
+};
+editor.core.show_start_page = function show_start_page() {
+  return editor.core.toggle_page.call(null, editor.core.$start, new cljs.core.Keyword(null, "func", "func", 1017058870), function() {
+    return document.title = editor.core.welcome_title;
+  });
 };
 editor.core.document_onkeydown = function document_onkeydown(e) {
   var key_bind_with_ctrl = function(k, fun) {
@@ -26839,9 +26873,35 @@ editor.core.document_onkeydown = function document_onkeydown(e) {
   key_bind_with_ctrl_alt.call(null, new cljs.core.Keyword(null, "m", "m", 1013904351), editor.core.close_all_buffers);
   key_bind_with_ctrl.call(null, new cljs.core.Keyword(null, "tab", "tab", 1014018823), editor.core.cycle_buffer);
   key_bind_with_ctrl.call(null, new cljs.core.Keyword(null, "w", "w", 1013904361), editor.core.write_config);
-  key_bind.call(null, new cljs.core.Keyword(null, "f1", "f1", 1013907453), editor.core.toggle_control_panel);
-  key_bind.call(null, new cljs.core.Keyword(null, "f2", "f2", 1013907454), editor.core.cycle_editor_themes);
-  key_bind.call(null, new cljs.core.Keyword(null, "f11", "f11", 1014003832), editor.core.toggle_about);
+  key_bind.call(null, new cljs.core.Keyword(null, "f1", "f1", 1013907453), editor.core.show_start_page);
+  key_bind.call(null, new cljs.core.Keyword(null, "f2", "f2", 1013907454), function(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind) {
+    return function() {
+      return editor.core.toggle_page.call(null, editor.core.$control_panel, new cljs.core.Keyword(null, "func", "func", 1017058870), function(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind) {
+        return function() {
+          return editor.core.set_editor_title.call(null, "Control Panel");
+        };
+      }(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind));
+    };
+  }(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind));
+  key_bind.call(null, new cljs.core.Keyword(null, "f3", "f3", 1013907455), editor.core.cycle_editor_themes);
+  key_bind.call(null, new cljs.core.Keyword(null, "f10", "f10", 1014003831), function(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind) {
+    return function() {
+      return editor.core.toggle_page.call(null, editor.core.$help, new cljs.core.Keyword(null, "func", "func", 1017058870), function(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind) {
+        return function() {
+          return editor.core.set_editor_title.call(null, "Help");
+        };
+      }(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind));
+    };
+  }(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind));
+  key_bind.call(null, new cljs.core.Keyword(null, "f11", "f11", 1014003832), function(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind) {
+    return function() {
+      return editor.core.toggle_page.call(null, editor.core.$about, new cljs.core.Keyword(null, "func", "func", 1017058870), function(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind) {
+        return function() {
+          return editor.core.set_editor_title.call(null, "About");
+        };
+      }(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind));
+    };
+  }(key_bind_with_ctrl, key_bind_with_ctrl_alt, key_bind_with_alt, key_bind));
   key_bind.call(null, new cljs.core.Keyword(null, "f12", "f12", 1014003833), editor.util.show_nw_dev_tools);
   return e;
 };
@@ -26858,42 +26918,44 @@ editor.core.display_notification = function display_notification(msg) {
   });
 };
 editor.core.bind_events = function bind_events() {
-  editor.util.bind_element_event.call(null, editor.core.$file_open_dialog, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4992_SHARP_) {
-    return editor.core.file_open_dialog_change_event.call(null, p1__4992_SHARP_);
+  editor.util.bind_element_event.call(null, editor.core.$file_open_dialog, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4983_SHARP_) {
+    return editor.core.file_open_dialog_change_event.call(null, p1__4983_SHARP_);
   });
-  editor.util.bind_element_event.call(null, editor.core.$file_save_as_dialog, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4993_SHARP_) {
-    return editor.core.file_save_as_dialog_change_event.call(null, p1__4993_SHARP_);
+  editor.util.bind_element_event.call(null, editor.core.$file_save_as_dialog, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4984_SHARP_) {
+    return editor.core.file_save_as_dialog_change_event.call(null, p1__4984_SHARP_);
   });
-  editor.util.bind_element_event.call(null, editor.core.$buffer_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4994_SHARP_) {
-    editor.core.buffer_switcher_change_event.call(null, p1__4994_SHARP_.value);
-    return editor.core.toggle_control_panel.call(null);
+  editor.util.bind_element_event.call(null, editor.core.$buffer_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4985_SHARP_) {
+    editor.core.buffer_switcher_change_event.call(null, p1__4985_SHARP_.value);
+    return editor.core.toggle_page.call(null, editor.core.$control_panel, new cljs.core.Keyword(null, "func", "func", 1017058870), function() {
+      return editor.core.set_editor_title.call(null, "Control Panel");
+    });
   });
-  editor.util.bind_element_event.call(null, editor.core.$theme_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4995_SHARP_) {
-    editor.ace.set_editor_theme.call(null, editor.core.editor, p1__4995_SHARP_.value);
-    editor.core.display_notification.call(null, [cljs.core.str("Theme: "), cljs.core.str(p1__4995_SHARP_.value)].join(""));
+  editor.util.bind_element_event.call(null, editor.core.$theme_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4986_SHARP_) {
+    editor.ace.set_editor_theme.call(null, editor.core.editor, p1__4986_SHARP_.value);
+    editor.core.display_notification.call(null, [cljs.core.str("Theme: "), cljs.core.str(p1__4986_SHARP_.value)].join(""));
     return editor.core.write_config.call(null);
   });
-  editor.util.bind_element_event.call(null, editor.core.$language_mode_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4996_SHARP_) {
-    return editor.ace.set_editor_highlighting_mode.call(null, editor.core.editor.getSession(), p1__4996_SHARP_.value);
+  editor.util.bind_element_event.call(null, editor.core.$language_mode_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4987_SHARP_) {
+    return editor.ace.set_editor_highlighting_mode.call(null, editor.core.editor.getSession(), p1__4987_SHARP_.value);
   });
-  editor.util.bind_element_event.call(null, editor.core.$font_size_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4997_SHARP_) {
-    editor.ace.set_editor_font_size.call(null, editor.core.editor, p1__4997_SHARP_.value);
+  editor.util.bind_element_event.call(null, editor.core.$font_size_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4988_SHARP_) {
+    editor.ace.set_editor_font_size.call(null, editor.core.editor, p1__4988_SHARP_.value);
     return editor.core.write_config.call(null);
   });
-  editor.util.bind_element_event.call(null, editor.core.$show_invisible_chars, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__4998_SHARP_) {
-    return editor.ace.show_invisible_chars.call(null, editor.core.editor, p1__4998_SHARP_.checked);
+  editor.util.bind_element_event.call(null, editor.core.$show_invisible_chars, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__4989_SHARP_) {
+    return editor.ace.show_invisible_chars.call(null, editor.core.editor, p1__4989_SHARP_.checked);
   });
-  editor.util.bind_element_event.call(null, editor.core.$show_indent_guides, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__4999_SHARP_) {
-    return editor.ace.show_indent_guides.call(null, editor.core.editor, p1__4999_SHARP_.checked);
+  editor.util.bind_element_event.call(null, editor.core.$show_indent_guides, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__4990_SHARP_) {
+    return editor.ace.show_indent_guides.call(null, editor.core.editor, p1__4990_SHARP_.checked);
   });
-  editor.util.bind_element_event.call(null, editor.core.$show_gutter, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__5000_SHARP_) {
-    return editor.ace.show_gutter.call(null, editor.core.editor, p1__5000_SHARP_.checked);
+  editor.util.bind_element_event.call(null, editor.core.$show_gutter, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__4991_SHARP_) {
+    return editor.ace.show_gutter.call(null, editor.core.editor, p1__4991_SHARP_.checked);
   });
-  editor.util.bind_element_event.call(null, editor.core.$line_wrap, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__5001_SHARP_) {
-    return editor.ace.set_line_wrap.call(null, editor.core.editor, p1__5001_SHARP_.checked);
+  editor.util.bind_element_event.call(null, editor.core.$line_wrap, new cljs.core.Keyword(null, "click", "click", 1108654330), function(p1__4992_SHARP_) {
+    return editor.ace.set_line_wrap.call(null, editor.core.editor, p1__4992_SHARP_.checked);
   });
-  return editor.util.bind_element_event.call(null, editor.core.$line_endings_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__5002_SHARP_) {
-    return editor.ace.set_line_endings_mode.call(null, editor.core.editor, p1__5002_SHARP_.value);
+  return editor.util.bind_element_event.call(null, editor.core.$line_endings_switcher, new cljs.core.Keyword(null, "change", "change", 3947235106), function(p1__4993_SHARP_) {
+    return editor.ace.set_line_endings_mode.call(null, editor.core.editor, p1__4993_SHARP_.value);
   });
 };
 editor.core.document_ondrop = function document_ondrop(e) {
@@ -26935,8 +26997,8 @@ editor.core._init = function _init() {
   editor.util.watch_window_close_event.call(null, function() {
     return editor.core.write_config.call(null);
   });
-  editor.core.read_config.call(null, function(p1__5003_SHARP_) {
-    return editor.core.set_editor_props_from_config.call(null, cljs.core.js__GT_clj.call(null, JSON.parse(p1__5003_SHARP_), new cljs.core.Keyword(null, "keywordize-keys", "keywordize-keys", 4191781672), true));
+  editor.core.read_config.call(null, function(p1__4994_SHARP_) {
+    return editor.core.set_editor_props_from_config.call(null, cljs.core.js__GT_clj.call(null, JSON.parse(p1__4994_SHARP_), new cljs.core.Keyword(null, "keywordize-keys", "keywordize-keys", 4191781672), true));
   });
   editor.core.bind_events.call(null);
   return editor.core.insert_new_buffer_and_switch.call(null);

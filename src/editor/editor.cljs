@@ -10,7 +10,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 8 May 2014
+; 9 May 2014
 ;
 
 (ns editor.core
@@ -34,6 +34,10 @@
 (def $line-endings-switcher (jq/$ :#lineEndingsSwitcher))
 (def $language-mode-switcher (jq/$ :#languageModeSwitcher))
 (def $notification (jq/$ :#notification))
+(def $help (jq/$ :#help))
+(def $start (jq/$ :#start))
+
+(def pages [$start $editor $control-panel $about $help])
 
 ; Requires and miscellaneous
 (def fs-extra (js/require "fs-extra"))
@@ -46,12 +50,14 @@
 (def new-buffer-name "New.txt")
 (def editor-name "Frehley")
 
+(def welcome-title (str "Welcome to " editor-name))
 (def warning-close-buffer "Warning: Are you sure you want to close this buffer?")
 (def warning-close-all-buffers "Warning: Are you sure you want to close all buffers?")
 
 (def notification-fade-out-speed 1250)
 
 (def ace-themes (frehley/get-resource-list util/fs ace-resource-path "theme"))
+
 (def editor-state (atom []))
 (def current-buffer (atom {}))
 
@@ -63,7 +69,9 @@
 				:w 119
                 :tab 9
                 :f1 112
-				:f2 113				
+				:f2 113
+				:f3 114
+				:f10 121
 				:f11 122
                 :f12 123})
 
@@ -77,8 +85,7 @@
 	([]
 		(set-editor-title (:file-name @current-buffer)))		
 	([title]
-		;(util/log (str "setting title: " title))
-		(if (or (= title "Control Panel") (= title "About"))
+		(if (not= title (:file-name @current-buffer))
 			(set! js/document.title (str editor-name " - [" title "]"))
 			(set! js/document.title (str editor-name " - [" title "] (Lines: " (.getLength (.getSession editor)) ")")))))
 	
@@ -126,33 +133,21 @@
 
 (defn insert-new-buffer-and-switch []
 	(switch-buffer (insert-new-buffer)))
-			
-(defn toggle-about []
-	(jq/css $editor {:display "none"})
-	(jq/css $control-panel {:display "none"})
-	(if (= "none" (jq/css $about :display))
+
+(defn rerender-editor []
+	(.updateFull (.-renderer editor)))
+	
+(defn toggle-page [elem & {:keys [func] :or {func nil}}]
+	(doall (map #(jq/fade-out % "fast") pages))
+	(if (.is elem ":visible")
 		(do
-			(set-editor-title "About")
-			(jq/css $about {:display "none"})
-			(jq/fade-in $about "slow"))			
-		(do
-			(jq/fade-in $editor "slow")
-			(jq/css $about {:display "none"})
-			(set-editor-title))))
-			
-(defn toggle-control-panel []
-	"This toggles the editors visibility, the control panel is hidden beneath"
-	(jq/css $about {:display "none"})
-	(if (= "none" (jq/css $editor :display))
-		(do
-			(jq/css $control-panel {:display "none"})
-			(jq/fade-in $editor "slow")
-			(.updateFull (.-renderer editor))
+			(jq/fade-in $editor "fast")
+			(rerender-editor)
 			(set-editor-title))
-		(do
-			(jq/css $editor {:display "none"})
-			(jq/fade-in $control-panel "slow")
-			(set-editor-title "Control Panel"))))
+		(do			
+			(jq/fade-in elem "fast")
+			(when func
+				(func)))))
 				
 (defn write-config []
 	"Writes the editor configuration file to resources/config/settings.json"
@@ -270,7 +265,10 @@
 	(let [new-state (filter #(if-not (and (util/starts-with (:file-name %) new-buffer-name) (empty? (:text %))) %) @editor-state)]
 	;(util/log (str new-state))
 	new-state))
-		
+
+(defn show-start-page []
+	(toggle-page $start :func #(set! js/document.title welcome-title)))
+	
 (defn document-onkeydown [e]
 	"Handles all of the custom key combos for the editor. All combos start with CTRL and then the key."
 	;(util/log (str "Keycode: " (.-keyCode e)))
@@ -286,9 +284,11 @@
 		(key-bind-with-ctrl-alt :m close-all-buffers)
 		(key-bind-with-ctrl :tab cycle-buffer)
 		(key-bind-with-ctrl :w write-config)
-		(key-bind :f1 toggle-control-panel)
-		(key-bind :f2 cycle-editor-themes)		
-		(key-bind :f11 toggle-about)
+		(key-bind :f1 show-start-page)
+		(key-bind :f2 #(toggle-page $control-panel :func (fn [] (set-editor-title "Control Panel"))))		
+		(key-bind :f3 cycle-editor-themes)
+		(key-bind :f10 #(toggle-page $help :func (fn [] (set-editor-title "Help"))))
+		(key-bind :f11 #(toggle-page $about :func (fn [] (set-editor-title "About"))))
 		(key-bind :f12 util/show-nw-dev-tools)	
 		e))
 			
@@ -305,7 +305,7 @@
 (defn bind-events []
 	(util/bind-element-event $file-open-dialog :change #(file-open-dialog-change-event %))
 	(util/bind-element-event $file-save-as-dialog :change #(file-save-as-dialog-change-event %))
-	(util/bind-element-event $buffer-switcher :change #(do (buffer-switcher-change-event (.-value %)) (toggle-control-panel)))
+	(util/bind-element-event $buffer-switcher :change #(do (buffer-switcher-change-event (.-value %)) (toggle-page $control-panel :func (fn [] (set-editor-title "Control Panel")))))
 	(util/bind-element-event $theme-switcher :change #(do (frehley/set-editor-theme editor (.-value %)) (display-notification (str "Theme: " (.-value %))) (write-config)))
 	(util/bind-element-event $language-mode-switcher :change #(do (frehley/set-editor-highlighting-mode (.getSession editor) (.-value %))))
 	(util/bind-element-event $font-size-switcher :change #(do (frehley/set-editor-font-size editor (.-value %)) (write-config)))
@@ -340,6 +340,7 @@
 	(set! (.-ondrop js/window) (fn [e] (jq/prevent e)))
 	(set! (.-ondrop js/document) (fn [e] (document-ondrop e)))
 	(set! (.-onkeydown js/document) (fn [e] (document-onkeydown e)))
+	;(util/log (markdown (util/open-about-page)))
 	(jq/html $about (markdown (util/open-about-page)))	
 	(frehley/show-gutter editor false)
 	(frehley/set-editor-theme editor "chaos")
@@ -351,6 +352,7 @@
 	(read-config #(set-editor-props-from-config (js->clj (.parse js/JSON %) :keywordize-keys true)))
 	(bind-events)
 	(insert-new-buffer-and-switch))
+	;(show-start-page))
 	
 (jq/document-ready
  (-init))

@@ -4,6 +4,15 @@ Frehley is a minimal text editor based on Node-Webkit and the Ace Editor library
 
 ##Changelog
 
+9 May 2014
+
+- Changed how "pages" are toggled, now a somewhat generic function performs the work
+- Added start page and help page but they is nothing on them yet
+- Changed the function key combos to: F1 - Start page, F2 - Control Panel, F3 - Cycle themes, F10 - Help
+- Added a dependency for NeDB which is going to be used to store the recently edited files that
+  will appear on the start page. This will also be used to store the app preferences and the JSON file
+  that I'm using now will go away.
+
 8 May 2014
 
 - Theme toggling via F2 key
