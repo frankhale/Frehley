@@ -31,6 +31,7 @@
 (def $show-indent-guides (jq/$ :#showIndentGuides))
 (def $show-gutter (jq/$ :#showGutter))
 (def $line-wrap (jq/$ :#lineWrap))
+(def $print-margin (jq/$ :#printMargin))
 (def $line-endings-switcher (jq/$ :#lineEndingsSwitcher))
 (def $language-mode-switcher (jq/$ :#languageModeSwitcher))
 (def $notification (jq/$ :#notification))
@@ -157,6 +158,7 @@
 				 :show-indent-guides (jq/prop $show-indent-guides "checked")
 				 :show-gutter (jq/prop $show-gutter "checked")
 				 :line-wrap (jq/prop $line-wrap "checked")
+				 :print-margin (jq/prop $print-margin "checked")
 				 :line-endings-mode (jq/val $line-endings-switcher)}
 		  json (.stringify js/JSON (clj->js config-file))]
 		(.mkdirsSync fs-extra (.dirname path config-file-path))
@@ -178,8 +180,13 @@
 		  (jq/val $line-endings-switcher (:line-endings-mode config))
 		  (if (= (:line-wrap config) true)
 			(frehley/set-line-wrap editor 80)
-			(frehley/set-line-wrap editor 0))
-		  (jq/val $line-wrap (:line-wrap config))
+			(frehley/set-line-wrap editor 0))		  
+		  (jq/prop $line-wrap {:checked (:line-wrap config)})
+		  (if (= (:print-margin config) true)
+			(frehley/set-print-margin editor 80)
+			(frehley/set-print-margin editor -1))
+		  (util/log (str "print-margin: " (:print-margin config)))
+		  (jq/prop $print-margin {:checked (:print-margin config)})
 		  (frehley/set-line-endings-mode editor (:line-endings-mode config)))	  
 		(do
 		  (frehley/set-editor-theme editor (jq/val $theme-switcher))
@@ -301,7 +308,7 @@
 	(jq/fade-in $notification "slow" 
 		(fn [] (.setTimeout js/window
 			#(jq/fade-out $notification "slow") notification-fade-out-speed))))
-		
+	
 (defn bind-events []
 	(util/bind-element-event $file-open-dialog :change #(file-open-dialog-change-event %))
 	(util/bind-element-event $file-save-as-dialog :change #(file-save-as-dialog-change-event %))
@@ -312,9 +319,11 @@
 	(util/bind-element-event $show-invisible-chars :click #(frehley/show-invisible-chars editor (.-checked %)))
 	(util/bind-element-event $show-indent-guides :click #(frehley/show-indent-guides editor (.-checked %)))
 	(util/bind-element-event $show-gutter :click #(frehley/show-gutter editor (.-checked %)))
-	(util/bind-element-event $line-wrap :click #(frehley/set-line-wrap editor (.-checked %)))
+	(util/bind-element-event $line-wrap :click #(frehley/set-line-wrap editor 80))
+	(util/bind-element-event $print-margin :click #((if (.-checked %) 
+		(frehley/set-print-margin editor 80) (frehley/set-print-margin editor -1))))
 	(util/bind-element-event $line-endings-switcher :change #(frehley/set-line-endings-mode editor (.-value %))))
-	
+
 (defn document-ondrop [e]
 	(let [files (array-seq (.-files (.-dataTransfer e)))]
 		(jq/prevent e)

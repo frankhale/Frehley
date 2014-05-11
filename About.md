@@ -4,6 +4,13 @@ Frehley is a minimal text editor based on Node-Webkit and the Ace Editor library
 
 ##Changelog
 
+10 May 2014
+
+- Add option to show/hide the print margin at 80 columns
+- Fixed some other issues with properties being set correctly on the control panel
+  when set in the config file.
+- Add dependency on hiccups which will be used in the future for HTML element generation
+
 9 May 2014
 
 - Changed how "pages" are toggled, now a somewhat generic function performs the work

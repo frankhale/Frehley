@@ -102,6 +102,9 @@
 				(.setUseWrapMode session false)
 				(.setWrapLimitRange session nil nil)))))
 
+(defn set-print-margin [editor column]
+	(.setPrintMarginColumn editor column))
+				
 (defn get-resource-list [fs resource-path prefix]
 	(let [files (array-seq (.readdirSync fs resource-path))
 		  regex (js/RegExp (str "^" prefix "-(.*)\\.js$"))
