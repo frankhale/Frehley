@@ -10,7 +10,7 @@
 ;
 ; Frank Hale <frankhale@gmail.com>
 ; http://github.com/frankhale/editor
-; 9 May 2014
+; 11 May 2014
 ;
 
 (ns editor.core
@@ -36,9 +36,8 @@
 (def $language-mode-switcher (jq/$ :#languageModeSwitcher))
 (def $notification (jq/$ :#notification))
 (def $help (jq/$ :#help))
-(def $start (jq/$ :#start))
 
-(def pages [$start $editor $control-panel $about $help])
+(def pages [$editor $control-panel $about $help])
 
 ; Requires and miscellaneous
 (def fs-extra (js/require "fs-extra"))
@@ -273,9 +272,6 @@
 	;(util/log (str new-state))
 	new-state))
 
-(defn show-start-page []
-	(toggle-page $start :func #(set! js/document.title welcome-title)))
-	
 (defn document-onkeydown [e]
 	"Handles all of the custom key combos for the editor. All combos start with CTRL and then the key."
 	;(util/log (str "Keycode: " (.-keyCode e)))
@@ -291,7 +287,6 @@
 		(key-bind-with-ctrl-alt :m close-all-buffers)
 		(key-bind-with-ctrl :tab cycle-buffer)
 		(key-bind-with-ctrl :w write-config)
-		(key-bind :f1 show-start-page)
 		(key-bind :f2 #(toggle-page $control-panel :func (fn [] (set-editor-title "Control Panel"))))		
 		(key-bind :f3 cycle-editor-themes)
 		(key-bind :f10 #(toggle-page $help :func (fn [] (set-editor-title "Help"))))

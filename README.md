@@ -41,7 +41,6 @@ Key short cuts
 - CTRL+ALT+M - Closes all files being edited
 - CTRL+ALT+B - Reloads the editor in Node-Webkit
 - CTRL+TAB - Cycles through opened files
-- F1 - Opens the start page
 - F2 - Opens the control panel (switch editor theme, font size and current buffer, etc...)
 - F3 - Cycle threw the Ace editor themes 
 - F10 - Opens the help page
