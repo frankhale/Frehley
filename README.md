@@ -1,7 +1,7 @@
 # (Ace) Frehley
 
-This is simple text editor using the Ace editor control in Node-Webkit. This is mainly
-a learning aid in order to learn more about Clojurescript and Node-Webkit.
+This is simple text editor using the Ace editor control in Node-Webkit. This is
+mainly a learning aid in order to learn more about Clojurescript and NW.js.
 
 Editor Screenshot:
 
@@ -23,37 +23,42 @@ http://youtu.be/i3DCsL4S8ck
 
 ## Usage
 
-This editor must be ran inside of Node-Webkit
+This editor must be ran inside of NW.js
 
-- Clone or download this repository, put the code in it's own folder named editor
-- Download Node-Webkit from https://github.com/rogerwang/node-webkit
-- Unzip Node-Webkit
-- Copy the editor folder to your Node-Webkit folder
-- Open a command prompt to the Node-Webkit directory
-- Run the editor by typing the following into your command prompt and hitting enter: nw editor
+* Clone or download this repository, put the code in it's own folder named editor
+* Download Node-Webkit from https://github.com/rogerwang/node-webkit
+* Unzip Node-Webkit
+* Copy the editor folder to your Node-Webkit folder
+* Open a command prompt to the Node-Webkit directory
+* Run the editor by typing the following into your command prompt and hitting enter: nw editor
 
 Key short cuts
 
-- CTRL+O - Opens the file open dialog
-- CTRL+S - Saves file being edited or opens the file save as dialog
-- CTRL+N - Creates new empty buffer
-- CTRL+M - Closes the current file being edited
-- CTRL+ALT+M - Closes all files being edited
-- CTRL+ALT+B - Reloads the editor in Node-Webkit
-- CTRL+TAB - Cycles through opened files
-- F2 - Opens the control panel (switch editor theme, font size and current buffer, etc...)
-- F3 - Cycle threw the Ace editor themes 
-- F10 - Opens the help page
-- F11 - Shows About information which also contains changelog data
-- F12 - Opens Node-Webkit Dev Tools
+* CTRL+O - Opens the file open dialog
+* CTRL+S - Saves file being edited or opens the file save as dialog
+* CTRL+N - Creates new empty buffer
+* CTRL+M - Closes the current file being edited
+* CTRL+ALT+M - Closes all files being edited
+* CTRL+ALT+B - Reloads the editor in Node-Webkit
+* CTRL+TAB - Cycles through opened files
+* F2 - Opens the control panel (switch editor theme, font size and current buffer, etc...)
+* F3 - Cycle threw the Ace editor themes
+* F10 - Opens the help page
+* F11 - Shows About information which also contains changelog data
+* F12 - Opens Node-Webkit Dev Tools
 
 You can drag files onto the editor and it will open the files for editing. Use CTRL+TAB to cycle through
 them or hit F1 to open the control panel and select the file you want from the buffer list then hit F1 again
-to return to the editor. 
+to return to the editor.
+
+## Date
+
+Originally created in 2014
+Updated on March 4th 2018
 
 ## License
 
-Copyright © 2014 Frank Hale
+Copyright © 2018 Frank Hale &lt;frankhale@gmail.com&gt;
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

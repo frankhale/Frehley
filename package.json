@@ -1,6 +1,6 @@
 {
-  "name": "Frehley",
-  "main": "app://localhost/index.html",
+  "name": "frehley",
+  "main": "index.html",
   "maintainers": [
     {
       "name": "Frank Hale",
@@ -8,10 +8,7 @@
       "web": "https://github.com/frankhale"
     }
   ],
-  "keywords": [
-    "text editor",
-    "node-webkit"
-  ],
+  "keywords": ["text editor", "node-webkit"],
   "licenses": [
     {
       "type": "EPLv1",
@@ -29,9 +26,6 @@
     "toolbar": false,
     "width": 800,
     "height": 600
-  },
-  "webkit": {
-    "plugin": true
   },
   "dependencies": {
     "fs-extra": "^0.8.1",

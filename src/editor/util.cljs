@@ -17,7 +17,7 @@
 (def fs (js/require "fs"))
 
 (defn open-about-page []
-	(str (.readFileSync fs "About.md")))
+  (str (.readFileSync fs "About.md")))
 
 (defn read-file-sync [file]
   (.readFileSync fs (.-path file)))
@@ -41,21 +41,10 @@
 
 (defn watch-window-close-event [func]
   (.on window "close" (fn []
-                        (func)                        
+                        (func)
                         (.close window true))))
 
 ; Collection related
-
-; Source borrowed from Clojure: http://clojuredocs.org/clojure_core/clojure.core/nthrest
-(defn nthrest
-  "Returns the nth rest of coll, coll when n is 0."
-  {:added "1.3"
-   :static true}
-  [coll n]
-    (loop [n n xs coll]
-      (if (and (pos? n) (seq xs))
-        (recur (dec n) (rest xs))
-        xs)))
 
 ; borrowed from: http://stackoverflow.com/a/8642069/170217
 (defn indices [pred coll]
@@ -70,17 +59,17 @@
   (filter #(if (not= (k %) v) %) m))
 
 (defn starts-with [a b]
-	(first (map = a b)))
+  (first (map = a b)))
 
 (defn without [elem coll]
-	(filter #(if-not (= elem %) %) coll))
-	
+  (filter #(if-not (= elem %) %) coll))
+
 ; borrowed from: http://stackoverflow.com/a/3249777/170217
-(defn in? 
+(defn in?
   "true if seq contains elm"
-  [seq elm]  
+  [seq elm]
   (some #(= elm %) seq))
-  
+
 ; uses jayq (jQuery helper lib)
 
 (defn create-option [elem val]
