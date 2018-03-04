@@ -1,13 +1,6 @@
-;
-; A small utility library that is being built up for use with Node-Webkit apps
-;
-; The name needs to be changed later to reflect that it's more of a generic utility
-; lib for node-webkit apps and not necessarily restricted to just the editor.
-;
 ; Frank Hale <frankhale@gmail.com>
-; http://github.com/frankhale/editor
-; 9 May 2014
-;
+; http://github.com/frankhale/Frehley
+; 4 March 2018
 
 (ns editor.util
   (:require [jayq.core :as jq]))

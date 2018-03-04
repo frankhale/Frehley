@@ -1,17 +1,6 @@
-;
-; This is a small text editor created for the purposes of learning
-; more about ClojureScript and Node-Webkit.
-;
-; Dependencies:
-;
-; Ace - http://ace.ajax.org
-; ClojureScript - https://github.com/clojure/clojurescript
-; Node-Webkit - https://github.com/rogerwang/node-webkit
-;
 ; Frank Hale <frankhale@gmail.com>
-; http://github.com/frankhale/editor
-; 11 May 2014
-;
+; http://github.com/frankhale/Frehley
+; 4 March 2018
 
 (ns editor.core
   (:require [jayq.core :as jq]
@@ -184,7 +173,7 @@
       (if (= (:print-margin config) true)
        (frehley/set-print-margin editor 80)
        (frehley/set-print-margin editor -1))
-      (util/log (str "print-margin: " (:print-margin config)))
+      ;(util/log (str "print-margin: " (:print-margin config)))
       (jq/prop $print-margin {:checked (:print-margin config)})
       (frehley/set-line-endings-mode editor (:line-endings-mode config)))
     (do

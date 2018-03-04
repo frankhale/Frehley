@@ -35,14 +35,14 @@ Key short cuts
 * CTRL+N - Creates new empty buffer
 * CTRL+M - Closes the current file being edited
 * CTRL+ALT+M - Closes all files being edited
-* CTRL+ALT+B - Reloads the editor in Node-Webkit
+* CTRL+ALT+B - Reloads the editor in NW.js
 * CTRL+TAB - Cycles through opened files
 * F2 - Opens the control panel (switch editor theme, font size and current
   buffer, etc...)
 * F3 - Cycle threw the Ace editor themes
 * F10 - Opens the help page
 * F11 - Shows About information which also contains changelog data
-* F12 - Opens Node-Webkit Dev Tools
+* F12 - Opens NW.js Devtools
 
 You can drag files onto the editor and it will open the files for editing. Use
 CTRL+TAB to cycle through them or hit F1 to open the control panel and select

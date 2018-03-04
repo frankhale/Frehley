@@ -1,9 +1,6 @@
-;
-; A small library for interacting with the Ace editor control
-;
 ; Frank Hale <frankhale@gmail.com>
-; http://github.com/frankhale/editor
-; 30 April 2014
+; http://github.com/frankhale/Frehley
+; 4 March 2018
 
 (ns editor.ace
   (:use [editor.util :only [log]]))
@@ -94,14 +91,14 @@
   (.setNewLineMode (.getSession editor) mode))
 
 (defn set-line-wrap [editor lines]
-    (let [session (.getSession editor)]
-     (if (> lines 0)
-       (do
-         (.setUseWrapMode session true)
-         (.setWrapLimitRange session lines lines))
-       (do
-         (.setUseWrapMode session false)
-         (.setWrapLimitRange session nil nil)))))
+  (let [session (.getSession editor)]
+    (if (> lines 0)
+      (do
+        (.setUseWrapMode session true)
+        (.setWrapLimitRange session lines lines))
+      (do
+        (.setUseWrapMode session false)
+        (.setWrapLimitRange session nil nil)))))
 
 (defn set-print-margin [editor column]
   (.setPrintMarginColumn editor column))
