@@ -13,7 +13,8 @@
                  "16px"
                  "18px"
                  "20px"
-                 "22px"])
+                 "22px"
+                 "24px"])
 
 (defn set-editor-highlighting-mode
   ([session mode]

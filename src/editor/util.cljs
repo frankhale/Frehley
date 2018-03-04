@@ -25,7 +25,7 @@
 (defn write-file-sync [file-path content]
   (.writeFileSync fs file-path content))
 
-; Node-Webkit related
+; NW.js related
 
 (def nw-gui (js/require "nw.gui"))
 (def window (.get (.-Window nw-gui)))

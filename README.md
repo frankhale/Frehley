@@ -1,6 +1,7 @@
 # (Ace) Frehley
 
-This is just a toy editor in order to play around with NW.js and Clojurescript.
+This is just a toy editor in order to play around with Clojurescript and NW.js.
+This code is really old and really badly written, LOL!
 
 Editor Screenshot:
 
@@ -20,7 +21,7 @@ This editor must be ran inside of NW.js
 
 * Clone or download this repository, put the code in it's own folder named
   editor
-* Download Node-Webkit from [https://github.com/nwjs/nw.js](https://github.com/nwjs/nw.js)
+* Download NW.js from [https://github.com/nwjs/nw.js](https://github.com/nwjs/nw.js)
 * Unzip NW.js
 * Copy the editor folder to your NW.js folder
 * Open a command prompt to the NW.js directory
